@@ -169,6 +169,8 @@ Cargo.lock
 *.pdb
 
 # Project files
+.idea/
+.vscode/
 bin/
 
 build/*/*
