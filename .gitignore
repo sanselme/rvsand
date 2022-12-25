@@ -177,6 +177,7 @@ logs/
 
 build/*/*
 !build/*/README.md
+!build/firmware/jh7110-recovery-20221205.bin
 
 **.crt
 **.key
