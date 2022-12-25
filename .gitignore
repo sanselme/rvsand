@@ -172,6 +172,8 @@ Cargo.lock
 .idea/
 .vscode/
 bin/
+log/
+logs/
 
 build/*/*
 !build/*/README.md
