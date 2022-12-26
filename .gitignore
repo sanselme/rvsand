@@ -169,10 +169,15 @@ Cargo.lock
 *.pdb
 
 # Project files
+.idea/
+.vscode/
 bin/
+log/
+logs/
 
 build/*/*
 !build/*/README.md
+!build/firmware/jh7110-recovery-20221205.bin
 
 **.crt
 **.key
