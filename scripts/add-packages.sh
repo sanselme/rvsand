@@ -17,12 +17,27 @@
 
 set -eux
 
-: "${CROSS_COMPILE:=riscv64-linux-gnu-}"
-
-# build opensbi
-cd build/opensbi
-
-CROSS_COMPILE="${CROSS_COMPILE}" make PLATFORM=generic -j "$(nproc)"
-
-# copy opensbi to firmware/
-cp -f build/opensbi/build/platform/generic/firmware/fw_dynamic.bin "${HOME}/"
+apt install -y \
+  autoconf \
+  automake \
+  autotools-dev \
+  bc \
+  bison \
+  build-essential \
+  curl \
+  device-tree-compiler \
+  flex \
+  gawk \
+  gcc-riscv64-linux-gnu \
+  git \
+  libexpat-dev \
+  libgmp-dev \
+  libmpc-dev \
+  libmpfr-dev \
+  libncurses-dev \
+  libssl-dev \
+  libtool \
+  patchutils \
+  python3-dev \
+  swig \
+  zlib1g-dev
