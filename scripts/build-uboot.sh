@@ -20,14 +20,11 @@ set -eux
 : "${CROSS_COMPILE:=riscv64-linux-gnu-}"
 : "${OPENSBI:=firmware/opensbi-riscv64.bin}"
 
-# build uboot
+# build u-boot
 cd build/uboot
 
 CROSS_COMPILE="${CROSS_COMPILE}" OPENSBI="${OPENSBI}" make -j qemu-riscv64_spl_defconfig
 CROSS_COMPILE="${CROSS_COMPILE}" OPENSBI="${OPENSBI}" make -j "$(nproc)"
 
-# copy uboot to firmware/
-cp -f spl/u-boot-spl.bin "${HOME}/"
-
-# copy itb to data/
-cp -f u-boot.itb "${HOME}/"
+cp -f spl/u-boot-spl.bin build/firmware/
+cp -f u-boot.itb build/kernel/

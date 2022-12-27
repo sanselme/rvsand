@@ -24,5 +24,4 @@ cd build/opensbi
 
 CROSS_COMPILE="${CROSS_COMPILE}" make PLATFORM=generic -j "$(nproc)"
 
-# copy opensbi to firmware/
-cp -f build/opensbi/build/platform/generic/firmware/fw_dynamic.bin "${HOME}/"
+cp -f build/opensbi/build/platform/generic/firmware/fw_dynamic.bin /build/firmware/
