@@ -8,15 +8,14 @@ qemu-system-riscv32 \
   -uuid $(uuidgen) \
   -machine virt \
   -cpu rv32 \
-  -smp ${3:-1} \
-  -m ${4:-256m} \
-  -bios "${2:-none}" \
+  -smp ${2:-1} \
+  -m ${3:-256m} \
+  -bios "${4:-none}" \
+  -kernel ${1} \
   -object rng-random,id=rng0,filename=/dev/random \
   -device virtio-rng-device,rng=rng0 \
   -device virtio-net-device,netdev=net0 \
-  -device virtio-blk-device,drive=hd0 \
   -netdev user,id=net0,hostfwd=tcp::10022-:22 \
-  -drive file="${1}",format=raw,if=none,id=hd0 \
   -serial mon:stdio \
   -nographic \
-  ${@}
+  ${@:5}
