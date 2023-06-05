@@ -1,1 +1,13 @@
 # Firmware
+
+OpenSBI is used as the initial bootloader. It is built from source and
+installed in the `build/firmware` directory.
+
+- opensbi.bin
+- opensbi.bin.sig
+
+## SHASUMS
+
+e7844a521c62a5b8d1bbe2423c485de72493befb9e30f18ebea903683d00e02249902ed22110dc4d6ee7d27071c1bbe13823b127fe9bc7256870e7de7161fb65  README.md
+02c7f58abf8554f62d6f190db249f5ee2834c36bb9718299a42a99e8d2ce7cdd033b5c1a0c80a357f082e88a19627fdb327635375be7580cdd07d0f00217db2b  opensbi.bin
+705ce8bc785783038b5225e88cc44ca1890d66709ed93d2ee450e74875bebbc5af870c89a369b6263fa04d3a732524a73da7a2417bfdc1973a1004528a29c045  opensbi.bin.sig

@@ -1,0 +1,168 @@
+#!/bin/bash
+
+# Copyright (c) 2022 Schubert Anselme <schubert@anselm.es>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+set -e
+
+: "${BIOS:=${PWD}/build/firmware/opensbi.bin}"
+: "${KERNEL:=${PWD}/build/kernel/uboot.bin}"
+: "${MODE:=interactive}"
+
+RV32_EXEC="${PWD}/scripts/run-rv-32.sh"
+RV64_EXEC="${PWD}/scripts/run-rv-64.sh"
+
+# output help information
+print_help()
+{
+  echo """
+Usage: run [OPTIONS] IMAGE [QEMU ARGS]
+Options:
+  -h,         --help           Print this help
+  -v,         --version        Print version information
+  -b BIOS,    --bios=BIOS      Specify the BIOS to use
+  -k KERNEL,  --kernel=KERNEL  Specify the kernel to use
+  -m MODE,    --mode=MODE      Specify the mode to use (daemon, interactive, graphic) (default: interactive)
+  --arch=ARCH                  Specify the architecture to use (32, 64) (default: 64)
+  """
+}
+
+# output version information
+print_version()
+{
+  echo "Version: 0.0.1"
+}
+
+# parse arguments
+while [[ $# -gt 0 ]]
+do
+  case "$1" in
+    -h|--help|help)
+      print_help
+      exit 0
+      ;;
+    -v|--version|version)
+      print_version
+      exit 0
+      ;;
+    -b)
+      shift
+      if test $# -gt 0
+      then
+       BIOS="${1}"
+      else
+        echo "no bios specified"
+        exit 1
+      fi
+      shift
+      ;;
+    --bios=*)
+      BIOS="${1//--bios=/}"
+      shift
+      ;;
+    -k)
+      shift
+      if test $# -gt 0
+      then
+        KERNEL="${1}"
+      else
+        echo "no kernel specified"
+        exit 1
+      fi
+      shift
+      ;;
+    --kernel=*)
+      KERNEL="${1//--kernel/}"
+      shift
+      ;;
+    -m)
+      shift
+      if test $# -gt 0
+      then
+        if [[ "${1}" == "daemon" || "${1}" == "interactive" || "${1}" == "graphic" ]]
+        then
+         MODE="${1}"
+        else
+          echo "invalid mode specified (daemon, interactive, graphic)"
+          exit 1
+        fi
+      else
+        echo "no mode specified"
+        exit 1
+      fi
+      shift
+      ;;
+    --mode=*)
+       MODE="${1//--mode=/}"
+      shift
+      ;;
+    --arch=*)
+      ARCH="${1//--arch=/}"
+      shift
+      ;;
+    *)
+      [[ -n ${1} ]] && IMAGE="${1}"
+      [[ -n ${2} ]] && ARGS="${2} "
+      break
+      ;;
+  esac
+done
+
+# determine args based on mode
+if [[ "${MODE}" == "interactive" ]]
+then
+  export ARGS+="-serial mon:stdio -nographic"
+elif [[ "${MODE}" == "daemon" ]]
+then
+  export ARGS+="-serial mon:stdio -nographic -daemonize"
+elif [[ "${MODE}" == "graphic" ]]
+then
+  export ARGS+="-monitor stdio -device ramfb"
+fi
+
+# determine exec based on arch
+if [[ ${ARCH} -gt 0 && ${ARCH} == 32 ]]
+then
+  export EXEC="${RV64_EXEC}"
+else
+  export EXEC="${RV64_EXEC}"
+fi
+
+# FIXME: determine format based on file extention
+FMT="$(echo "${IMAGE}" | rev | cut -d'.' -f1| rev)" || true
+case "${FMT}" in
+  "qcow2")
+    export FORMAT="qcow2"
+    ;;
+  "img")
+    export FORMAT="raw"
+    ;;
+  *)
+    echo "invalid image format ${FMT}"
+    exit 1
+    ;;
+esac
+
+# TODO: check data image exists, otherwise create it
+
+echo "ARGS  : ${ARGS}"
+echo "BIOS  : ${BIOS}"
+echo "IMAGE : ${IMAGE}"
+echo "KERNEL: ${KERNEL}"
+echo "MODE  : ${MODE}"
+
+# run qemu
+[[ "${EXEC}" == "${RV32_EXEC}" ]] && "${EXEC}" "${BIOS}" "${KERNEL}" "${IMAGE}" "${ARGS}"
+[[ "${EXEC}" == "${RV64_EXEC}" ]] && "${EXEC}" "${BIOS}" "${KERNEL}" "${FORMAT}" "${IMAGE}" "${ARGS}"

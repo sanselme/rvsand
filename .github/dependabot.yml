@@ -6,31 +6,31 @@
 version: 2
 updates:
   # Maintain dependencies for Git Submodule
-  # - package-ecosystem: "gitsubmodule"
-  #   directory: "/"
+  # - package-ecosystem: gitsubmodule
+  #   directory: /
   #   schedule:
-  #     interval: "daily"
+  #     interval: daily
 
   # Maintain dependencies for GitHub Actions
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: github-actions
+    directory: /
     schedule:
-      interval: "daily"
-
-  # Maintain dependencies for Go
-  - package-ecosystem: "gomod"
-    directory: "/"
-    schedule:
-      interval: "daily"
+      interval: daily
 
   # Maintain dependencies for Docker
-  # - package-ecosystem: "docker"
-  #   directory: "/"
+  # - package-ecosystem: docker
+  #   directory: /
   #   schedule:
-  #     interval: "daily"
+  #     interval: daily
+
+  # Maintain dependencies for Go
+  # - package-ecosystem: gomod
+  #   directory: /
+  #   schedule:
+  #     interval: daily
 
   # Maintain dependencies for Cargo
-  - package-ecosystem: "cargo"
-    directory: "/"
-    schedule:
-      interval: "daily"
+  # - package-ecosystem: cargo
+  #   directory: /
+  #   schedule:
+  #     interval: daily
